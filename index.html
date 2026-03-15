@@ -141,7 +141,7 @@ body {
 .pt-sub  { font-size: 0.67rem; color: rgba(255,200,200,0.38); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pt-pct  { font-family: 'Space Mono', monospace; font-size: 0.68rem; color: var(--red3); text-align: right; }
 .pt-bar-wrap { height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
-.pt-bar { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--red), var(--red3)); }
+.pt-bar { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--red), var(--red3)); transition: width 0.3s ease; }
 /* SPIN BTN */
 #spin-btn {
   width: 100%; background: linear-gradient(135deg, var(--red), var(--red2), var(--red3));
@@ -589,49 +589,47 @@ var DEFS = {
   'Keychain': {
     quote: '"Your presence is the most precious gift you can give to another human being."',
     msgs: [
-      'You hit the jackpot! The exclusive PRESENCE Keychain is yours — plus both stickers. Lucky you! 🎊',
+      'You hit the jackpot! The exclusive PRESENCE Keychain is yours plus both stickers. Lucky you!',
       'Rare win! Only the chosen few get the Keychain. Enjoy every bit of it!',
-      'The reel chose you for the grand prize — Keychain + stickers, all yours to keep forever!'
+      'The reel chose you for the grand prize — Keychain plus stickers, all yours to keep forever!'
     ],
     gets: [
-      { img: 'capstone', wide: true, title: '🔗 PRESENCE Keychain', desc: 'Double-sided acrylic keychain' },
-      { img: 'logo',     wide: false, title: '🏷 PRESENCE Logo Sticker', desc: 'Official P-eye logo sticker' },
-      { img: 'team',     wide: false, title: '🏷 Team PRESENCE Sticker', desc: 'Team poster sticker' }
+      { img: 'capstone', wide: true,  title: '🔗 PRESENCE Keychain',        desc: 'Double-sided acrylic keychain'    },
+      { img: 'logo',     wide: false, title: '🏷 PRESENCE Logo Sticker',    desc: 'Official P-eye logo sticker'      },
+      { img: 'team',     wide: false, title: '🏷 Team PRESENCE Sticker',    desc: 'Team pixel art sticker'           }
     ],
     showKC: true
   },
-  'Stickers': {
-    quote: '"Be present. Be seen. Be PRESENCE."',
-    msgs: [
-      'Two beautiful PRESENCE stickers are yours! Stick them everywhere and spread the love! 🏷',
-      'Sticker haul! Both official PRESENCE stickers — show them off loud and proud! 🌟',
-      'You have won both PRESENCE stickers. Our logo and Team poster — both yours to cherish! ✨'
-    ],
-    gets: [
-      { img: 'logo', wide: false, title: '🏷 PRESENCE Logo Sticker', desc: 'Official P-eye logo sticker' },
-      { img: 'team', wide: false, title: '🏷 Team PRESENCE Sticker', desc: 'Team poster sticker' }
-    ],
-    showKC: false
-  },
-  'Team Sticker': {
+  'Team PRESENCE Sticker': {
     quote: '"Every great team leaves a mark. This one is yours."',
     msgs: [
-      'You are taking home the exclusive Team PRESENCE sticker! Rep the squad wherever you go! 👯',
+      'You are taking home the exclusive Team PRESENCE sticker! Rep the squad wherever you go!',
       'The Team PRESENCE sticker is all yours! Four members, one team, infinite presence. ✨',
-      'Lucky spin! The Team PRESENCE sticker belongs to you — wear it with pride! 🌟'
+      'Lucky spin! The Team PRESENCE sticker belongs to you — wear it with pride!'
     ],
     gets: [
       { img: 'team', wide: false, title: '🏷 Team PRESENCE Sticker', desc: 'Exclusive team pixel art sticker' }
     ],
     showKC: false
+  },
+  'PRESENCE Logo Sticker': {
+    quote: '"Be present. Be seen. Be PRESENCE."',
+    msgs: [
+      'The PRESENCE Logo sticker is yours! The iconic P-eye goes home with you today. 🏷',
+      'You won the official PRESENCE logo sticker! Stick it everywhere and let the world know. 🌟',
+      'The P-eye sticker belongs to you now — a little piece of PRESENCE to take with you!'
+    ],
+    gets: [
+      { img: 'logo', wide: false, title: '🏷 PRESENCE Logo Sticker', desc: 'Official P-eye logo sticker' }
+    ],
+    showKC: false
   }
 };
-
 // ── STATE ────────────────────────────────────────────
 var prizes = [
-  { name: 'Keychain',     emoji: '🔗', sub: 'Keychain + PRESENCE sticker + Team sticker', pct: 25 },
-  { name: 'Stickers',     emoji: '🏷', sub: 'PRESENCE logo sticker + Team PRESENCE sticker', pct: 50 },
-  { name: 'Team Sticker', emoji: '👯', sub: 'Exclusive Team PRESENCE pixel art sticker', pct: 25 }
+  { name: 'Keychain',              emoji: '🔗', sub: 'Keychain + PRESENCE sticker + Team sticker', pct: 16 },
+  { name: 'Team PRESENCE Sticker', emoji: '👯', sub: 'Exclusive Team PRESENCE pixel art sticker',  pct: 19 },
+  { name: 'PRESENCE Logo Sticker', emoji: '🏷', sub: 'Official PRESENCE P-eye logo sticker',       pct: 65 }
 ];
 var spinning = false;
 var bulbTimer = null;
@@ -714,6 +712,7 @@ function syncPrize(i, row) {
   prizes[i].emoji = row.querySelector('.pe-emoji').value || '🎁';
   prizes[i].name  = row.querySelector('.pe-name').value  || 'Prize';
   updateTotalBar();
+  renderTable(); // live update main page
 }
 
 function sliderMove(input, i) {
@@ -721,17 +720,20 @@ function sliderMove(input, i) {
   var el = document.getElementById('pv' + i);
   if (el) el.textContent = prizes[i].pct + '%';
   updateTotalBar();
+  renderTable(); // live update main page
 }
 
 function deletePrize(i) {
   if (prizes.length <= 1) return;
   prizes.splice(i, 1);
   renderEditor();
+  renderTable();
 }
 
 function addPrize() {
   prizes.push({ name: 'New Prize', emoji: '🎁', sub: '', pct: 0 });
   renderEditor();
+  renderTable();
   var drw = document.querySelector('.s-drawer');
   setTimeout(function() { drw.scrollTop = drw.scrollHeight; }, 60);
 }
@@ -741,6 +743,7 @@ function distributeEvenly() {
   var rem = 100 - share * prizes.length;
   prizes.forEach(function(p, i) { p.pct = share + (i === 0 ? rem : 0); });
   renderEditor();
+  renderTable();
 }
 
 function updateTotalBar() {
@@ -776,6 +779,13 @@ function applyPrizes() {
   if (total !== 100) return;
   renderTable();
   closeSettings();
+  // Flash the table rows to confirm the apply
+  var rows = document.querySelectorAll('.pt-row');
+  rows.forEach(function(r) {
+    r.style.transition = 'background 0.15s';
+    r.style.background = 'rgba(232,37,58,0.18)';
+    setTimeout(function() { r.style.background = ''; }, 400);
+  });
 }
 
 // ── LOGO UPLOAD ───────────────────────────────────────
