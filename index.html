@@ -612,13 +612,26 @@ var DEFS = {
       { img: 'team', wide: false, title: '🏷 Team PRESENCE Sticker', desc: 'Team poster sticker' }
     ],
     showKC: false
+  },
+  'Team Sticker': {
+    quote: '"Every great team leaves a mark. This one is yours."',
+    msgs: [
+      'You are taking home the exclusive Team PRESENCE sticker! Rep the squad wherever you go! 👯',
+      'The Team PRESENCE sticker is all yours! Four members, one team, infinite presence. ✨',
+      'Lucky spin! The Team PRESENCE sticker belongs to you — wear it with pride! 🌟'
+    ],
+    gets: [
+      { img: 'team', wide: false, title: '🏷 Team PRESENCE Sticker', desc: 'Exclusive team pixel art sticker' }
+    ],
+    showKC: false
   }
 };
 
 // ── STATE ────────────────────────────────────────────
 var prizes = [
-  { name: 'Keychain', emoji: '🔗', sub: 'Keychain + both stickers', pct: 25 },
-  { name: 'Stickers', emoji: '🏷', sub: 'PRESENCE sticker + Team sticker', pct: 75 }
+  { name: 'Keychain',     emoji: '🔗', sub: 'Keychain + PRESENCE sticker + Team sticker', pct: 25 },
+  { name: 'Stickers',     emoji: '🏷', sub: 'PRESENCE logo sticker + Team PRESENCE sticker', pct: 50 },
+  { name: 'Team Sticker', emoji: '👯', sub: 'Exclusive Team PRESENCE pixel art sticker', pct: 25 }
 ];
 var spinning = false;
 var bulbTimer = null;
